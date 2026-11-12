@@ -37,11 +37,13 @@ export function page(lang, { formUrl, site }) {
     'Des longs trajets entre les villes du Québec et les aéroports, à tes heures. Embarque comme chauffeur Navetto.',
   );
 
-  // The phone: a trip request as the driver app lists it. Decorative; the trip is an example.
+  // The phone: a trip request as the driver app lists it, playing on a loop (see "The scene" in the CSS): it arrives,
+  // its route draws, its facts appear, Accept is tapped, it's accepted. Decorative; the trip is an example.
   const phone = `<figure class="phone" aria-hidden="true">
     <div class="screen">
       <div class="bar"><span class="bar-title">${t('Requests', 'Demandes')}</span><span class="dot"></span></div>
-      <div class="offer">
+      <div class="offer offer-1">
+        <div class="ok"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><b>${t('Trip accepted', 'Trajet accepté')}</b><span>${t('Rimouski → YQB · Fri. 7:30', 'Rimouski → YQB · ven. 7 h 30')}</span></div>
         <div class="when">${t('Fri. Nov. 20 · 7:30 a.m.', 'ven. 20 nov. · 7 h 30')}</div>
         <ol class="route">
           <li><b>Rimouski</b></li>
@@ -147,17 +149,47 @@ h1{font-size:clamp(42px,5.6vw,68px);line-height:1.04;margin-top:26px}
 
 /* The visual: a soft panel, the road's centre line running down it, the phone on top. */
 .visual{position:relative;display:grid;place-items:center;min-height:620px;border-radius:32px;background:#f4f5f2;overflow:hidden}
-.lane{position:absolute;top:0;bottom:0;left:50%;width:6px;margin-left:-3px;background:repeating-linear-gradient(180deg,#f4b400 0 46px,transparent 46px 82px);animation:drive 1.6s linear infinite}
+.lane{position:absolute;top:0;bottom:0;left:50%;width:6px;margin-left:-3px;background:repeating-linear-gradient(180deg,#f4b400 0 46px,transparent 46px 82px);animation:drive 2.4s linear infinite}
 @keyframes drive{to{background-position:0 82px}}
 .phone{position:relative;width:300px;padding:11px;border-radius:46px;background:#1c2226}
 .screen{border-radius:36px;background:#fff;padding:24px 16px 26px;display:grid;align-content:start;gap:12px}
 .bar{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 8px}
 .bar-title{font-weight:800;font-size:22px}
-.dot{width:10px;height:10px;border-radius:50%;background:#f4b400}
-.offer{border:1.5px solid #e3e7e4;border-radius:20px;padding:16px;display:grid;gap:12px;animation:rise .7s cubic-bezier(.2,.7,.2,1) both .2s}
-.offer-2{opacity:.5;animation-name:rise2;animation-delay:.35s}
-@keyframes rise{from{opacity:0;transform:translateY(14px)}}
-@keyframes rise2{from{opacity:0;transform:translateY(14px)}to{opacity:.5}}
+.dot{position:relative;width:10px;height:10px;border-radius:50%;background:#f4b400}
+.dot::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:2px solid #f4b400;opacity:0;animation:ping var(--loop) ease-out infinite}
+.offer{position:relative;overflow:hidden;border:1.5px solid #e3e7e4;border-radius:20px;padding:16px;display:grid;gap:12px;background:#fff}
+.offer-2{opacity:.5;animation:push var(--loop) var(--ease) infinite}
+
+/* The scene, one 9 s loop: a request arrives (0–8%), its route draws (8–16%), its facts and the share appear
+   (16–30%), Accept is tapped (52%), the trip is accepted (55–88%), and it all leaves for the next one (90–100%). */
+.phone{--loop:9s;--ease:cubic-bezier(.2,.75,.2,1)}
+.offer-1{animation:arrive var(--loop) var(--ease) infinite}
+@keyframes arrive{0%{opacity:0;transform:translateY(-28px) scale(.96)}8%,90%{opacity:1;transform:none}98%,100%{opacity:0;transform:translateY(12px) scale(.98)}}
+@keyframes push{0%{transform:translateY(-40px);opacity:.5}8%,100%{transform:none}}
+@keyframes ping{0%,2%{opacity:.9;transform:scale(.6)}12%,100%{opacity:0;transform:scale(1.9)}}
+.offer-1 .route::before{transform-origin:top;animation:draw var(--loop) var(--ease) infinite}
+@keyframes draw{0%,8%{transform:scaleY(0)}16%,100%{transform:none}}
+.offer-1 .route li:last-child::before{animation:land var(--loop) var(--ease) infinite}
+@keyframes land{0%,14%{transform:scale(0)}18%,100%{transform:none}}
+.offer-1 .route li:last-child{animation:show var(--loop) var(--ease) infinite;--at:14%}
+.offer-1 .facts span:nth-child(1){animation:f1 var(--loop) var(--ease) infinite}
+.offer-1 .facts span:nth-child(2){animation:f2 var(--loop) var(--ease) infinite}
+.offer-1 .facts span:nth-child(3){animation:f3 var(--loop) var(--ease) infinite}
+.offer-1 .share{animation:f4 var(--loop) var(--ease) infinite}
+@keyframes show{0%,13%{opacity:0;transform:translateX(-6px)}18%,100%{opacity:1;transform:none}}
+@keyframes f1{0%,17%{opacity:0;transform:translateY(6px)}21%,100%{opacity:1;transform:none}}
+@keyframes f2{0%,19%{opacity:0;transform:translateY(6px)}23%,100%{opacity:1;transform:none}}
+@keyframes f3{0%,21%{opacity:0;transform:translateY(6px)}25%,100%{opacity:1;transform:none}}
+@keyframes f4{0%,25%{opacity:0;transform:translateY(6px)}30%,100%{opacity:1;transform:none}}
+.offer-1 .yes{animation:tap var(--loop) ease infinite}
+@keyframes tap{0%,49%{transform:none;background:#f4b400}52%{transform:scale(.93);background:#e0a500}55%,100%{transform:none;background:#f4b400}}
+/* Accepted: the card turns guide-sign green with a tick. */
+.ok{position:absolute;inset:0;z-index:2;display:grid;place-content:center;justify-items:center;gap:6px;padding:16px;text-align:center;background:#0e6b47;color:#fff;border-radius:inherit;opacity:0;animation:ok var(--loop) var(--ease) infinite}
+.ok svg{width:46px;height:46px;padding:9px;border-radius:50%;background:#fff;fill:none;stroke:#0e6b47;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;animation:tick var(--loop) var(--ease) infinite}
+.ok b{font-weight:800;font-size:18px}
+.ok span{font-size:13px;opacity:.85}
+@keyframes ok{0%,54%{opacity:0;clip-path:circle(0 at 72% 88%)}62%,100%{opacity:1;clip-path:circle(150% at 72% 88%)}}
+@keyframes tick{0%,60%{stroke-dashoffset:24}68%,100%{stroke-dashoffset:0}}
 .when{font-weight:600;font-size:13px;color:#6b756f}
 .route{list-style:none;display:grid;gap:10px;position:relative;padding-left:22px}
 .route::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:#1c2226}
@@ -194,5 +226,6 @@ h1{font-size:clamp(42px,5.6vw,68px);line-height:1.04;margin-top:26px}
   .phone{transform:scale(.92)}
   .foot span{width:100%}
 }
-@media (prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition:none!important}}
+/* Without motion: the request as it stands, before it's accepted; the road still. */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.ok{display:none}}
 `;
