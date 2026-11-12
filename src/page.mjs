@@ -26,15 +26,15 @@ export function page(lang, { formUrl, site }) {
   const svg = (name, cls = 'ic') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${ic[name]}</svg>`;
 
   const points = [
-    ['clock', t('Your hours', 'Vos heures'), t('Drive when it suits you.', 'Conduisez quand ça vous convient.')],
-    ['eye', t('Your share, up front', 'Votre part, d’avance'), t('Shown before you accept.', 'Affichée avant d’accepter.')],
-    ['pin', t('Close to home', 'Près de chez vous'), t('Trips start in your area.', 'Les trajets partent de votre région.')],
+    ['clock', t('Your hours', 'Tes heures'), t('Drive when it suits you.', 'Tu conduis quand ça te convient.')],
+    ['eye', t('Your share, up front', 'Ta part, d’avance'), t('Shown before you accept.', 'Affichée avant d’accepter.')],
+    ['pin', t('Close to home', 'Proche de chez toi'), t('Trips start in your area.', 'Les trajets partent de ta région.')],
   ];
 
-  const title = t('Drive with Navetto', 'Conduisez avec Navetto');
+  const title = t('Drive with Navetto', 'Chauffeur Navetto : ton char, tes heures, ta paye');
   const description = t(
     'Long trips between Québec’s cities and airports, on your hours. Become a Navetto driver.',
-    'De longs trajets entre les villes du Québec et les aéroports, à vos heures. Devenez chauffeur Navetto.',
+    'Des longs trajets entre les villes du Québec et les aéroports, à tes heures. Embarque comme chauffeur Navetto.',
   );
 
   // The phone: a trip request as the driver app lists it. Decorative; the trip is an example.
@@ -48,7 +48,7 @@ export function page(lang, { formUrl, site }) {
           <li><b>${t('Québec City airport', 'Aéroport de Québec')}</b><small>YQB</small></li>
         </ol>
         <div class="facts"><span>312 km</span><span>3 h 10</span><span>${t('2 riders', '2 passagers')}</span></div>
-        <div class="share"><span>${t('Your share', 'Votre part')}</span><b>${t('shown here', 'affichée ici')}</b></div>
+        <div class="share"><span>${t('Your share', 'Ta part')}</span><b>${t('shown here', 'affichée ici')}</b></div>
         <div class="acts"><span class="no">${t('Decline', 'Refuser')}</span><span class="yes">${t('Accept', 'Accepter')}</span></div>
       </div>
       <div class="offer offer-2">
@@ -89,12 +89,12 @@ export function page(lang, { formUrl, site }) {
 <main class="hero">
   <div class="pitch">
     <p class="eyebrow"><span class="live"></span>${t('Now recruiting across Québec', 'On recrute partout au Québec')}</p>
-    <h1>${t('Drive the<br>long trips.', 'Conduisez les<br>longs trajets.')}</h1>
+    <h1>${t('Your car.<br>Your hours.<br>Your pay.', 'Ton char.<br>Tes heures.<br>Ta paye.')}</h1>
     <p class="sub">${t(
       'Private rides from city to city and to the airports. Riders book and pay in the app; you drive.',
-      'Des trajets privés de ville en ville et vers les aéroports. Les passagers réservent et paient dans l’app; vous conduisez.',
+      'Des trajets privés de ville en ville et vers les aéroports. Les passagers réservent et paient dans l’app; toi, tu conduis.',
     )}</p>
-    <a class="cta" href="${formUrl}">${t('Become a driver', 'Devenir chauffeur')}${svg('arrow', 'cta-ic')}</a>
+    <a class="cta" href="${formUrl}">${t('Become a driver', 'Embarque avec nous')}${svg('arrow', 'cta-ic')}</a>
     <ul class="points">
       ${points.map(([i, h, p]) => `<li>${svg(i)}<div><b>${h}</b><span>${p}</span></div></li>`).join('\n      ')}
     </ul>
@@ -134,7 +134,7 @@ a{color:inherit}
 .hero{flex:1;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;padding:32px 0 64px}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:15px;color:#55605a;padding:7px 14px 5px 12px;border:1.5px solid #e3e7e4;border-radius:999px}
 .live{width:8px;height:8px;border-radius:50%;background:#0e7c55}
-h1{font-size:clamp(46px,7.2vw,88px);margin-top:26px}
+h1{font-size:clamp(42px,5.6vw,68px);line-height:1.04;margin-top:26px}
 .sub{font-size:clamp(18px,1.6vw,21px);color:#55605a;max-width:30em;margin-top:24px}
 .cta{display:inline-flex;align-items:center;gap:12px;margin-top:36px;min-height:60px;padding:0 30px 0 32px;border-radius:999px;background:#f4b400;color:#1c2226;font:800 19px/1 Overpass,sans-serif;text-decoration:none;transition:background .2s,gap .2s}
 .cta:hover{background:#ffc21a;gap:16px}
