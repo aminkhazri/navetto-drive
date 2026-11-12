@@ -22,6 +22,7 @@ export function page(lang, { formUrl, site }) {
     eye: '<path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
     pin: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    badge: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16c.6-1.5 1.8-2.3 3.2-2.3s2.6.8 3.2 2.3M14.5 10h3.5M14.5 13.5h3.5"/>',
   };
   const svg = (name, cls = 'ic') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${ic[name]}</svg>`;
 
@@ -97,6 +98,8 @@ export function page(lang, { formUrl, site }) {
       'Des trajets privés de ville en ville et vers les aéroports. Les passagers réservent et paient dans l’app; toi, tu conduis.',
     )}</p>
     <a class="cta" href="${formUrl}">${t('Become a driver', 'Embarque avec nous')}${svg('arrow', 'cta-ic')}</a>
+    <div class="qual">${svg('badge', 'qual-ic')}<p><b>${t('We’re looking for qualified drivers (taxi).', 'On cherche des chauffeurs qualifiés (taxi).')}</b>
+      ${t('Not qualified yet? We’ll help you through the SAAQ process, step by step.', 'Pas encore qualifié? On t’accompagne dans les démarches à la SAAQ, étape par étape.')}</p></div>
     <ul class="points">
       ${points.map(([i, h, p]) => `<li>${svg(i)}<div><b>${h}</b><span>${p}</span></div></li>`).join('\n      ')}
     </ul>
@@ -141,7 +144,11 @@ h1{font-size:clamp(42px,5.6vw,68px);line-height:1.04;margin-top:26px}
 .cta{display:inline-flex;align-items:center;gap:12px;margin-top:36px;min-height:60px;padding:0 30px 0 32px;border-radius:999px;background:#f4b400;color:#1c2226;font:800 19px/1 Overpass,sans-serif;text-decoration:none;transition:background .2s,gap .2s}
 .cta:hover{background:#ffc21a;gap:16px}
 .cta-ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.points{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px;padding-top:28px;border-top:1.5px solid #eceeeb}
+.qual{display:flex;gap:14px;align-items:flex-start;margin-top:28px;max-width:34em;padding:16px 18px 14px;border-radius:16px;background:#fff8e1;border:1.5px solid #f4d77a}
+.qual p{font-size:15.5px;line-height:1.45;color:#3d4642}
+.qual b{display:block;font-weight:800;font-size:16.5px;color:#1c2226;margin-bottom:2px}
+.qual-ic{flex:none;width:26px;height:26px;margin-top:1px;fill:none;stroke:#1c2226;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.points{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px;padding-top:28px;border-top:1.5px solid #eceeeb}
 .points li{display:grid;gap:10px;align-content:start}
 .points b{display:block;font-weight:800;font-size:16px}
 .points span{display:block;font-size:15px;color:#6b756f;line-height:1.4}
