@@ -1,0 +1,5 @@
+dist/
+shots/
+signups.log
+shoot.mjs
+node_modules/
