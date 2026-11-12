@@ -11,16 +11,15 @@
 const NOTIFY = 'bonjour@navetto.ca';
 const SHEET_NAME = 'Navetto — Chauffeurs inscrits / Driver sign-ups';
 const TAB = 'Site';
-const COLUMNS = ['Received', 'First name', 'Last name', 'Phone', 'Email', 'City', 'Car', 'Size', 'Licence 12 months', 'Language'];
+const COLUMNS = ['Received', 'Name', 'Phone', 'City', 'Car', 'Language'];
 
 function doPost(e) {
   const p = (e && e.parameter) || {};
   // The page's hidden "website" field: people never fill it, bots do.
   if (p.website) return ContentService.createTextOutput('ok');
   const clean = (v) => String(v || '').trim().slice(0, 200);
-  const row = [new Date(), clean(p.firstName), clean(p.lastName), clean(p.phone), clean(p.email), clean(p.city),
-    clean(p.car), clean(p.size), p.licence12 === 'yes' ? 'yes' : 'no', clean(p.lang)];
-  if (!row[1] || !row[3]) return ContentService.createTextOutput('missing');
+  const row = [new Date(), clean(p.name), clean(p.phone), clean(p.city), clean(p.car), clean(p.lang)];
+  if (!row[1] || !row[2]) return ContentService.createTextOutput('missing');
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
@@ -30,11 +29,9 @@ function doPost(e) {
     lock.releaseLock();
   }
 
-  const name = row[1] + ' ' + row[2];
   MailApp.sendEmail({
     to: NOTIFY,
-    replyTo: row[4] || NOTIFY,
-    subject: 'Nouveau chauffeur : ' + name + ' (' + row[5] + ')',
+    subject: 'Nouveau chauffeur : ' + row[1] + ' (' + row[3] + ')',
     body: COLUMNS.slice(1).map((c, i) => c + ': ' + row[i + 1]).join('\n'),
   });
   return ContentService.createTextOutput('ok');
@@ -60,6 +57,5 @@ function tab() {
 
 /** Run once from the editor to check: it adds a test row and sends a test email. */
 function testSignup() {
-  doPost({ parameter: { firstName: 'Test', lastName: 'Navetto', phone: '514 555-0123', email: NOTIFY, city: 'Montréal',
-    car: 'Toyota RAV4 2021', size: 'SUV', licence12: 'yes', lang: 'fr' } });
+  doPost({ parameter: { name: 'Test Navetto', phone: '514 555-0123', city: 'Montréal', car: 'Honda CR-V 2020', lang: 'fr' } });
 }
