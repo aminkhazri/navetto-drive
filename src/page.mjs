@@ -1,4 +1,4 @@
-// The driver sign-up page, in one language: 'fr' (served at /) or 'en' (at /en/). One screen: a headline, three
+// The driver sign-up page, in one language: 'fr' (served at /) or 'en' (at /en/). One screen: a headline,
 // one line and four fields. Design: navetto-ui-kit docs/design-standard; white, with the driver's caution yellow as accent.
 // signupUrl: the Apps Script web app the form posts to. Without one, the card is a button to fallbackUrl (the Google Form).
 import { ROUTE, PIN } from './logo.mjs';
