@@ -30,7 +30,7 @@ a { color: inherit; text-decoration-color: var(--yellow); text-decoration-thickn
 /* Buttons: yellow with ink text, 48 px tall at least. */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px;
   border: 2px solid var(--yellow); border-radius: 999px; background: var(--yellow); color: var(--ink);
-  font: 800 17px/1 Overpass, sans-serif; text-decoration: none; cursor: pointer; }
+  font: 800 17px/1.15 Overpass, sans-serif; text-align: center; text-decoration: none; cursor: pointer; }
 .btn:hover { background: #ffc61f; border-color: #ffc61f; }
 .btn:disabled { opacity: 0.6; cursor: progress; }
 .btn-sm { min-height: 40px; padding: 0 16px; font-size: 15px; }

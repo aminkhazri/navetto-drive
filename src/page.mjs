@@ -2,7 +2,8 @@
 // Words: t('English', 'Français'). Design: navetto-ui-kit docs/design-standard, the driver's caution yellow.
 import { ROUTE, PIN } from './logo.mjs';
 
-export function page(lang, { signupUrl, site }) {
+// signupUrl: the Apps Script web app the form posts to. Without one, the sign-up is a button to fallbackUrl (the Google Form).
+export function page(lang, { signupUrl, fallbackUrl, site }) {
   const fr = lang === 'fr';
   const t = (en, f) => (fr ? f : en);
   const other = fr ? { href: '/en/', label: 'English', lang: 'en' } : { href: '/', label: 'Français', lang: 'fr' };
@@ -175,7 +176,8 @@ export function page(lang, { signupUrl, site }) {
       <p>${t('Leave your details. We’ll call you within a few days to get you on the road.', 'Laissez vos coordonnées. On vous appelle d’ici quelques jours pour vous mettre sur la route.')}</p>
       <p class="small">${t('Free, no commitment.', 'Gratuit, sans engagement.')}</p>
     </div>
-    <form class="form" id="signup" action="${signupUrl}" method="post" novalidate>
+    ${signupUrl ? '' : `<div class="done"><h2>${t('Sign up in 1 minute', 'Inscrivez-vous en 1 minute')}</h2><p>${t('A short form: your name, your city and your car.', 'Un court formulaire : votre nom, votre ville et votre voiture.')}</p><a class="btn btn-lg btn-block" href="${fallbackUrl}">${t('Open the sign-up form', 'Ouvrir le formulaire d’inscription')}</a></div>`}
+    ${signupUrl ? `<form class="form" id="signup" action="${signupUrl}" method="post" novalidate>
       <input type="hidden" name="lang" value="${lang}">
       <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
       <div class="row">
@@ -198,7 +200,7 @@ export function page(lang, { signupUrl, site }) {
       <p class="error" id="error" role="alert" hidden></p>
       <button class="btn btn-lg btn-block" type="submit">${t('Send my sign-up', 'Envoyer mon inscription')}</button>
       <p class="small muted">${t('We use your details only to contact you about driving with Navetto.', 'Nous utilisons vos coordonnées seulement pour vous contacter au sujet de la conduite avec Navetto.')}</p>
-    </form>
+    </form>` : ''}
     <div class="done" id="done" hidden tabindex="-1">
       <h2>${t('Thanks! You’re on the list.', 'Merci! Vous êtes sur la liste.')}</h2>
       <p>${t('We’ll call you within a few days. Questions in the meantime?', 'On vous appelle d’ici quelques jours. Des questions d’ici là?')} <a href="mailto:bonjour@navetto.ca">bonjour@navetto.ca</a></p>
@@ -222,7 +224,7 @@ export function page(lang, { signupUrl, site }) {
   </div>
 </footer>
 
-<script>
+${signupUrl ? '' : '<!--'}<script>
 (() => {
   const form = document.getElementById('signup');
   const error = document.getElementById('error');
@@ -255,7 +257,7 @@ export function page(lang, { signupUrl, site }) {
     }
   });
 })();
-</script>
+</script>${signupUrl ? '' : '-->'}
 </body>
 </html>
 `;

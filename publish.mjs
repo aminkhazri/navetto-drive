@@ -9,12 +9,14 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const signupUrl = process.argv[2] || process.env.SIGNUP_URL;
-if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(signupUrl || '')) {
-  console.error('Give the Apps Script web app address: node publish.mjs https://script.google.com/macros/s/…/exec');
+// "--google-form": no Apps Script yet, so the sign-up button opens the Google Form.
+const viaForm = signupUrl === '--google-form';
+if (!viaForm && !/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(signupUrl || '')) {
+  console.error('Give the Apps Script web app address: node publish.mjs https://script.google.com/macros/s/…/exec (or --google-form)');
   process.exit(1);
 }
 const run = (cmd, args, cwd = root) => execFileSync(cmd, args, { cwd, stdio: 'inherit' });
-execFileSync(process.execPath, ['build.mjs'], { cwd: root, stdio: 'inherit', env: { ...process.env, SIGNUP_URL: signupUrl, SITE_URL: 'https://drive.navetto.ca' } });
+execFileSync(process.execPath, ['build.mjs'], { cwd: root, stdio: 'inherit', env: { ...process.env, SIGNUP_URL: viaForm ? '' : signupUrl, SITE_URL: 'https://drive.navetto.ca' } });
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'drive-pages-'));
 fs.cpSync(path.join(root, 'dist'), tmp, { recursive: true });
