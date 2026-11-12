@@ -2,6 +2,7 @@
 // sign-up form, beside a phone showing a trip request as the driver app lists it. Design: navetto-ui-kit
 // docs/design-standard; white, the driver's caution yellow as accent, ink text, Overpass, no shadows.
 import { ROUTE, PIN } from './logo.mjs';
+import { phone, phoneCss } from './phone.mjs';
 
 export function page(lang, { formUrl, site }) {
   const fr = lang === 'fr';
@@ -9,9 +10,9 @@ export function page(lang, { formUrl, site }) {
   const other = fr ? { href: '/en/', label: 'EN', name: 'English', lang: 'en' } : { href: '/', label: 'FR', name: 'Français', lang: 'fr' };
   const url = fr ? `${site}/` : `${site}/en/`;
 
-  const mark = `<svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-    <defs><clipPath id="m"><rect width="100" height="100" rx="22"/></clipPath></defs>
-    <g clip-path="url(#m)"><rect width="100" height="100" fill="#0e7c55"/>
+  const markSvg = (id) => `<svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+    <defs><clipPath id="${id}"><rect width="100" height="100" rx="22"/></clipPath></defs>
+    <g clip-path="url(#${id})"><rect width="100" height="100" fill="#0e7c55"/>
     <path d="${ROUTE}" fill="none" stroke="#fff" stroke-width="11.5" stroke-linejoin="round" stroke-linecap="round"/>
     <circle cx="30" cy="72" r="8" fill="#0e7c55" stroke="#fff" stroke-width="3.5"/>
     <path d="${PIN}" fill="#ff6b4a" stroke="#fff" stroke-width="3.5" stroke-linejoin="round"/>
@@ -38,29 +39,6 @@ export function page(lang, { formUrl, site }) {
     'Des longs trajets entre les villes du Québec et les aéroports, à tes heures. Embarque comme chauffeur Navetto.',
   );
 
-  // The phone: a trip request as the driver app lists it, playing on a loop (see "The scene" in the CSS): it arrives,
-  // its route draws, its facts appear, Accept is tapped, it's accepted. Decorative; the trip is an example.
-  const phone = `<figure class="phone" aria-hidden="true">
-    <div class="screen">
-      <div class="bar"><span class="bar-title">${t('Requests', 'Demandes')}</span><span class="dot"></span></div>
-      <div class="offer offer-1">
-        <div class="ok"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><b>${t('Trip accepted', 'Trajet accepté')}</b><span>${t('Rimouski → YQB · Fri. 7:30', 'Rimouski → YQB · ven. 7 h 30')}</span></div>
-        <div class="when">${t('Fri. Nov. 20 · 7:30 a.m.', 'ven. 20 nov. · 7 h 30')}</div>
-        <ol class="route">
-          <li><b>Rimouski</b></li>
-          <li><b>${t('Québec City airport', 'Aéroport de Québec')}</b><small>YQB</small></li>
-        </ol>
-        <div class="facts"><span>312 km</span><span>3 h 10</span><span>${t('2 riders', '2 passagers')}</span></div>
-        <div class="share"><span>${t('Your share', 'Ta part')}</span><b>${t('shown here', 'affichée ici')}</b></div>
-        <div class="acts"><span class="no">${t('Decline', 'Refuser')}</span><span class="yes">${t('Accept', 'Accepter')}</span></div>
-      </div>
-      <div class="offer offer-2">
-        <div class="when">${t('Sat. Nov. 21 · 2 p.m.', 'sam. 21 nov. · 14 h')}</div>
-        <ol class="route"><li><b>Rimouski</b></li><li><b>Montréal</b></li></ol>
-      </div>
-    </div>
-  </figure>`;
-
   return `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
@@ -81,11 +59,11 @@ export function page(lang, { formUrl, site }) {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&family=Manrope:wght@800&display=swap" rel="stylesheet">
-<style>${css}</style>
+<style>${css}${phoneCss}</style>
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="${fr ? '/' : '/en/'}" aria-label="Navetto">${mark}<span aria-hidden="true">avetto</span></a>
+  <a class="brand" href="${fr ? '/' : '/en/'}" aria-label="Navetto">${markSvg('m')}<span aria-hidden="true">avetto</span></a>
   <span class="plate">${t('Driver', 'Chauffeur')}</span>
   <a class="lang" href="${other.href}" hreflang="${other.lang}" lang="${other.lang}" aria-label="${other.name}">${other.label}</a>
 </header>
@@ -106,7 +84,7 @@ export function page(lang, { formUrl, site }) {
   </div>
   <div class="visual">
     <div class="lane" aria-hidden="true"></div>
-    ${phone}
+    ${phone(t, markSvg)}
   </div>
 </main>
 <footer class="foot">
@@ -154,66 +132,6 @@ h1{font-size:clamp(42px,5.6vw,68px);line-height:1.04;margin-top:26px}
 .points span{display:block;font-size:15px;color:#6b756f;line-height:1.4}
 .ic{width:22px;height:22px;fill:none;stroke:#1c2226;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* The visual: a soft panel, the road's centre line running down it, the phone on top. */
-.visual{position:relative;display:grid;place-items:center;min-height:620px;border-radius:32px;background:#f4f5f2;overflow:hidden}
-.lane{position:absolute;top:0;bottom:0;left:50%;width:6px;margin-left:-3px;background:repeating-linear-gradient(180deg,#f4b400 0 46px,transparent 46px 82px);animation:drive 2.4s linear infinite}
-@keyframes drive{to{background-position:0 82px}}
-.phone{position:relative;width:300px;padding:11px;border-radius:46px;background:#1c2226}
-.screen{border-radius:36px;background:#fff;padding:24px 16px 26px;display:grid;align-content:start;gap:12px}
-.bar{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 8px}
-.bar-title{font-weight:800;font-size:22px}
-.dot{position:relative;width:10px;height:10px;border-radius:50%;background:#f4b400}
-.dot::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:2px solid #f4b400;opacity:0;animation:ping var(--loop) ease-out infinite}
-.offer{position:relative;overflow:hidden;border:1.5px solid #e3e7e4;border-radius:20px;padding:16px;display:grid;gap:12px;background:#fff}
-.offer-2{opacity:.5;animation:push var(--loop) var(--ease) infinite}
-
-/* The scene, one 9 s loop: a request arrives (0–8%), its route draws (8–16%), its facts and the share appear
-   (16–30%), Accept is tapped (52%), the trip is accepted (55–88%), and it all leaves for the next one (90–100%). */
-.phone{--loop:9s;--ease:cubic-bezier(.2,.75,.2,1)}
-.offer-1{animation:arrive var(--loop) var(--ease) infinite}
-@keyframes arrive{0%{opacity:0;transform:translateY(-28px) scale(.96)}8%,90%{opacity:1;transform:none}98%,100%{opacity:0;transform:translateY(12px) scale(.98)}}
-@keyframes push{0%{transform:translateY(-40px);opacity:.5}8%,100%{transform:none}}
-@keyframes ping{0%,2%{opacity:.9;transform:scale(.6)}12%,100%{opacity:0;transform:scale(1.9)}}
-.offer-1 .route::before{transform-origin:top;animation:draw var(--loop) var(--ease) infinite}
-@keyframes draw{0%,8%{transform:scaleY(0)}16%,100%{transform:none}}
-.offer-1 .route li:last-child::before{animation:land var(--loop) var(--ease) infinite}
-@keyframes land{0%,14%{transform:scale(0)}18%,100%{transform:none}}
-.offer-1 .route li:last-child{animation:show var(--loop) var(--ease) infinite;--at:14%}
-.offer-1 .facts span:nth-child(1){animation:f1 var(--loop) var(--ease) infinite}
-.offer-1 .facts span:nth-child(2){animation:f2 var(--loop) var(--ease) infinite}
-.offer-1 .facts span:nth-child(3){animation:f3 var(--loop) var(--ease) infinite}
-.offer-1 .share{animation:f4 var(--loop) var(--ease) infinite}
-@keyframes show{0%,13%{opacity:0;transform:translateX(-6px)}18%,100%{opacity:1;transform:none}}
-@keyframes f1{0%,17%{opacity:0;transform:translateY(6px)}21%,100%{opacity:1;transform:none}}
-@keyframes f2{0%,19%{opacity:0;transform:translateY(6px)}23%,100%{opacity:1;transform:none}}
-@keyframes f3{0%,21%{opacity:0;transform:translateY(6px)}25%,100%{opacity:1;transform:none}}
-@keyframes f4{0%,25%{opacity:0;transform:translateY(6px)}30%,100%{opacity:1;transform:none}}
-.offer-1 .yes{animation:tap var(--loop) ease infinite}
-@keyframes tap{0%,49%{transform:none;background:#f4b400}52%{transform:scale(.93);background:#e0a500}55%,100%{transform:none;background:#f4b400}}
-/* Accepted: the card turns guide-sign green with a tick. */
-.ok{position:absolute;inset:0;z-index:2;display:grid;place-content:center;justify-items:center;gap:6px;padding:16px;text-align:center;background:#0e6b47;color:#fff;border-radius:inherit;opacity:0;animation:ok var(--loop) var(--ease) infinite}
-.ok svg{width:46px;height:46px;padding:9px;border-radius:50%;background:#fff;fill:none;stroke:#0e6b47;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;animation:tick var(--loop) var(--ease) infinite}
-.ok b{font-weight:800;font-size:18px}
-.ok span{font-size:13px;opacity:.85}
-@keyframes ok{0%,54%{opacity:0;clip-path:circle(0 at 72% 88%)}62%,100%{opacity:1;clip-path:circle(150% at 72% 88%)}}
-@keyframes tick{0%,60%{stroke-dashoffset:24}68%,100%{stroke-dashoffset:0}}
-.when{font-weight:600;font-size:13px;color:#6b756f}
-.route{list-style:none;display:grid;gap:10px;position:relative;padding-left:22px}
-.route::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:#1c2226}
-.route li{position:relative;display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:16px;line-height:1.2}
-.route li::before{content:'';position:absolute;left:-22px;top:2px;width:12px;height:12px;border-radius:50%;background:#fff;border:2.5px solid #1c2226}
-.route li:last-child::before{background:#1c2226}
-.route b{font-weight:800}
-.route small{font-size:12px;font-weight:600;color:#6b756f}
-.facts{display:flex;flex-wrap:wrap;gap:6px}
-.facts span{font-weight:600;font-size:12.5px;padding:4px 9px 2px;border-radius:999px;background:#f2f4f1}
-.share{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 8px;border-radius:12px;background:#fff4cc;font-size:13px}
-.share b{font-weight:800}
-.acts{display:grid;grid-template-columns:1fr 1.4fr;gap:8px}
-.acts span{display:grid;place-items:center;min-height:42px;border-radius:999px;font-weight:800;font-size:14px}
-.no{border:1.5px solid #cfd5d1}
-.yes{background:#f4b400}
-
 .foot{display:flex;flex-wrap:wrap;gap:8px 24px;padding:24px 0 28px;border-top:1.5px solid #eceeeb;font-size:14px;color:#6b756f}
 .foot a{text-decoration:none}
 .foot a:hover{color:#1c2226;text-decoration:underline;text-decoration-color:#f4b400;text-decoration-thickness:2px}
@@ -221,7 +139,6 @@ h1{font-size:clamp(42px,5.6vw,68px);line-height:1.04;margin-top:26px}
 
 @media (max-width:960px){
   .hero{grid-template-columns:1fr;gap:44px;padding:16px 0 48px}
-  .visual{min-height:560px;border-radius:28px}
 }
 @media (max-width:560px){
   .top,.hero,.foot{width:min(1180px,100% - 40px)}
@@ -229,10 +146,9 @@ h1{font-size:clamp(42px,5.6vw,68px);line-height:1.04;margin-top:26px}
   .cta{width:100%;justify-content:center}
   .points{grid-template-columns:1fr;gap:18px;margin-top:40px}
   .points li{grid-template-columns:22px 1fr;gap:14px}
-  .visual{min-height:540px;margin:0 -20px;border-radius:0}
-  .phone{transform:scale(.92)}
+  .visual{margin:0 -20px;border-radius:0}
   .foot span{width:100%}
 }
 /* Without motion: the request as it stands, before it's accepted; the road still. */
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.ok{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 `;
