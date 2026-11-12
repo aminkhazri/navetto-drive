@@ -17,7 +17,8 @@ node serve.mjs   # http://localhost:5190, sign-ups written to signups.log
 On Git Bash, prefix with `MSYS_NO_PATHCONV=1` so `/signup` isn't turned into a Windows path.
 
 ## Publish
-Every push to `main` builds and publishes to GitHub Pages (`.github/workflows/pages.yml`), at the custom domain
-`drive.navetto.ca` (IONOS DNS: `CNAME drive → aminkhazri.github.io`).
+`node publish.mjs <SIGNUP_URL>` builds the site for https://drive.navetto.ca and pushes it to the `gh-pages` branch,
+which GitHub Pages serves at the custom domain `drive.navetto.ca` (IONOS DNS: `CNAME drive → aminkhazri.github.io`).
+The `gh-pages` branch holds only built files and is replaced on each publish.
 
 The road photo is *Chemin Bombardier* by Mario Hains, CC BY-SA 3.0 (credited in the footer), from the driver app.
