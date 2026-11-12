@@ -14,7 +14,6 @@ const fallbackUrl = 'https://forms.gle/w7S7xDTgm4HiBfQj6';
 
 fs.rmSync(dist, { recursive: true, force: true });
 fs.cpSync(path.join(root, 'public'), dist, { recursive: true });
-fs.copyFileSync(path.join(root, 'src', 'site.css'), path.join(dist, 'site.css'));
 fs.writeFileSync(path.join(dist, 'index.html'), page('fr', { signupUrl, fallbackUrl, site }));
 fs.mkdirSync(path.join(dist, 'en'));
 fs.writeFileSync(path.join(dist, 'en', 'index.html'), page('en', { signupUrl, fallbackUrl, site }));
