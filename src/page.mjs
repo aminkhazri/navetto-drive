@@ -1,6 +1,7 @@
-// The driver page, in one language: 'fr' (served at /) or 'en' (at /en/). One screen: the pitch and the button to the
-// sign-up form, beside a phone showing a trip request as the driver app lists it. Design: navetto-ui-kit
-// docs/design-standard; white, the driver's caution yellow as accent, ink text, Overpass, no shadows.
+// The driver page, in one language: 'fr' (served at /) or 'en' (at /en/). The first screen is a Québec road at dawn,
+// edge to edge, with one thing said over it (long trips, done right), one button to the sign-up form and three marks
+// of trust. Under it, a phone showing a trip request as the driver app lists it, and the button again. Same look as
+// the driver app's sign-up page (navetto-driver-app #178): the driver's caution yellow, ink, Overpass.
 import { ROUTE, PIN } from './logo.mjs';
 import { phone, phoneCss } from './phone.mjs';
 
@@ -19,19 +20,17 @@ export function page(lang, { formUrl, site }) {
     <circle cx="70" cy="27.75" r="3.04" fill="#fff"/></g></svg>`;
 
   const ic = {
-    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-    eye: '<path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
-    pin: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
-    badge: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16c.6-1.5 1.8-2.3 3.2-2.3s2.6.8 3.2 2.3M14.5 10h3.5M14.5 13.5h3.5"/>',
   };
   const svg = (name, cls = 'ic') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${ic[name]}</svg>`;
 
-  const points = [
-    ['clock', t('Your hours', 'Tes heures'), t('Drive when it suits you.', 'Tu conduis quand ça te convient.')],
-    ['eye', t('Your share, up front', 'Ta part, d’avance'), t('Shown before you accept.', 'Affichée avant d’accepter.')],
-    ['pin', t('Close to home', 'Proche de chez toi'), t('Trips start in your area.', 'Les trajets partent de ta région.')],
+  // Three marks of trust: what makes a long trip with Navetto sure, for the driver and the rider.
+  const trust = [
+    t('Your share, shown before you accept', 'Ta part, affichée avant d’accepter'),
+    t('A fixed fare for the rider', 'Un prix fixe pour le client'),
+    t('Trips booked ahead', 'Des trajets réservés d’avance'),
   ];
+  const check = '<svg class="ck" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
   const title = t('Drive with Navetto', 'Chauffeur Navetto : ton char, tes heures, ta paye');
   const description = t(
@@ -53,7 +52,8 @@ export function page(lang, { formUrl, site }) {
 <meta property="og:description" content="${description}">
 <meta property="og:url" content="${url}">
 <meta property="og:image" content="${site}/share.png">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#1c2226">
+<link rel="preload" as="image" href="/scenes/dawn-route-de-la-station-sunrise.webp">
 <link rel="icon" type="image/png" sizes="32x32" href="/brand/navetto-favicon-32.png">
 <link rel="apple-touch-icon" href="/brand/navetto-mark-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,30 +67,36 @@ export function page(lang, { formUrl, site }) {
   <span class="plate">${t('Driver', 'Chauffeur')}</span>
   <a class="lang" href="${other.href}" hreflang="${other.lang}" lang="${other.lang}" aria-label="${other.name}">${other.label}</a>
 </header>
-<main class="hero">
-  <div class="pitch">
-    <p class="eyebrow"><span class="live"></span>${t('Now recruiting across Québec', 'On recrute partout au Québec')}</p>
-    <h1>${t('Your car.<br>Your hours.<br>Your pay.', 'Ton char.<br>Tes heures.<br>Ta paye.')}</h1>
-    <p class="sub">${t(
-      'Private rides from city to city and to the airports. Riders book and pay in the app; you drive.',
-      'Des trajets privés de ville en ville et vers les aéroports. Les passagers réservent et paient dans l’app; toi, tu conduis.',
-    )}</p>
-    <a class="cta" href="${formUrl}">${t('Become a driver', 'Embarque avec nous')}${svg('arrow', 'cta-ic')}</a>
-    <div class="qual">${svg('badge', 'qual-ic')}<p><b>${t('We’re looking for qualified drivers (taxi).', 'On cherche des chauffeurs qualifiés (taxi).')}</b>
-      ${t('Not qualified yet? We’ll help you through the SAAQ process, step by step.', 'Pas encore qualifié? On t’accompagne dans les démarches à la SAAQ, étape par étape.')}</p></div>
-    <ul class="points">
-      ${points.map(([i, h, p]) => `<li>${svg(i)}<div><b>${h}</b><span>${p}</span></div></li>`).join('\n      ')}
-    </ul>
-  </div>
-  <div class="visual">
-    <div class="lane" aria-hidden="true"></div>
-    ${phone(t, markSvg)}
-  </div>
+<main>
+  <section class="scene">
+    <div class="hero">
+      <h1><span>${t('Long-distance rides,', 'Les longs trajets,')} </span><span>${t('done right.', 'enfin bien faits.')}</span></h1>
+      <div class="go">
+        <a class="cta" href="${formUrl}">${t('Become a driver', 'Devenir chauffeur')}${svg('arrow', 'cta-ic')}</a>
+        <p class="note">${t('Free to sign up.', 'Inscription gratuite.')}</p>
+      </div>
+      <ul class="trust">
+        ${trust.map((words) => `<li>${check}${words}</li>`).join('\n        ')}
+      </ul>
+    </div>
+  </section>
+  <section class="below">
+    <div class="more">
+      <h2>${t('Qualified (taxi), or not yet?', 'Chauffeur qualifié (taxi), ou pas encore?')}</h2>
+      <p>${t('We’ll help you through the SAAQ process, step by step.', 'On t’accompagne dans les démarches à la SAAQ, étape par étape.')}</p>
+      <a class="cta" href="${formUrl}">${t('Become a driver', 'Devenir chauffeur')}${svg('arrow', 'cta-ic')}</a>
+    </div>
+    <div class="visual">
+      <div class="lane" aria-hidden="true"></div>
+      ${phone(t, markSvg)}
+    </div>
+  </section>
 </main>
 <footer class="foot">
   <span>© ${new Date().getFullYear()} Navetto</span>
   <a href="https://navetto.ca">navetto.ca</a>
   <a href="mailto:bonjour@navetto.ca">bonjour@navetto.ca</a>
+  <small>${t('Photo: Giorgio Galeotti, CC BY-SA 4.0', 'Photo : Giorgio Galeotti, CC BY-SA 4.0')}</small>
 </footer>
 </body>
 </html>
@@ -102,50 +108,58 @@ const css = `
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;font:400 17px/1.5 Overpass,system-ui,sans-serif;color:#1c2226;background:#fff}
-h1{font-weight:800;line-height:1;margin:0}
+h1,h2{font-weight:800;margin:0}
 p,figure,ol,ul{margin:0;padding:0}
 a{color:inherit}
 :focus-visible{outline:3px solid #1c2226;outline-offset:3px}
-.top,.hero,.foot{width:min(1180px,100% - 48px);margin:0 auto}
-.top{display:flex;align-items:center;gap:10px;padding:22px 0}
+main{flex:1}
+.top,.hero,.below,.foot{width:min(1180px,100% - 48px);margin:0 auto}
+
+/* The header lies over the photo, in white. */
+.top{position:absolute;left:0;right:0;z-index:1;display:flex;align-items:center;gap:10px;padding:22px 0;color:#fff}
 .brand{display:inline-flex;align-items:center;gap:1px;font:800 24px/1 Manrope,sans-serif;text-decoration:none}
 .mark{width:30px;height:30px}
 .plate{font-weight:800;font-size:13px;line-height:1;padding:5px 8px 3px;border-radius:6px;background:#f4b400;color:#1c2226}
-.lang{margin-left:auto;font-weight:800;font-size:14px;min-width:44px;min-height:44px;display:grid;place-items:center;text-decoration:none;border-radius:999px;color:#55605a}
-.lang:hover{color:#1c2226;background:#f2f4f1}
+.lang{margin-left:auto;font-weight:800;font-size:14px;min-width:44px;min-height:44px;display:grid;place-items:center;text-decoration:none;border-radius:999px}
+.lang:hover{background:rgb(255 255 255/.16)}
+.top :focus-visible,.scene :focus-visible{outline-color:#fff}
 
-.hero{flex:1;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;padding:32px 0 64px}
-.eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:15px;color:#55605a;padding:7px 14px 5px 12px;border:1.5px solid #e3e7e4;border-radius:999px}
-.live{width:8px;height:8px;border-radius:50%;background:#0e7c55}
-h1{font-size:clamp(42px,5.6vw,68px);line-height:1.04;margin-top:26px}
-.sub{font-size:clamp(18px,1.6vw,21px);color:#55605a;max-width:30em;margin-top:24px}
-.cta{display:inline-flex;align-items:center;gap:12px;margin-top:36px;min-height:60px;padding:0 30px 0 32px;border-radius:999px;background:#f4b400;color:#1c2226;font:800 19px/1 Overpass,sans-serif;text-decoration:none;transition:background .2s,gap .2s}
-.cta:hover{background:#ffc21a;gap:16px}
+/* The first screen: a Québec road at dawn, edge to edge; darker at the top for the header, at the bottom for the
+   words, which sit low over the road. */
+.scene{display:flex;min-height:min(100svh,920px);color:#fff;background:linear-gradient(180deg,rgb(10 14 16/.55) 0%,rgb(10 14 16/.15) 35%,rgb(10 14 16/.4) 60%,rgb(10 14 16/.92) 100%),#817673 url(/scenes/dawn-route-de-la-station-sunrise.webp) center 60%/cover}
+.hero{display:flex;flex-direction:column;justify-content:flex-end;padding:120px 0 48px}
+h1{font-size:clamp(46px,7.6vw,104px);line-height:.98;letter-spacing:-.02em;text-shadow:0 2px 30px rgb(0 0 0/.35)}
+h1 span{display:block}
+h1 span:last-child{color:#f4b400}
+.go{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px;margin-top:32px}
+.cta{display:inline-flex;align-items:center;gap:12px;min-height:60px;padding:0 30px 0 32px;border-radius:999px;background:#f4b400;box-shadow:0 4px 0 #b08200;color:#1c2226;font:800 20px/1 Overpass,sans-serif;text-decoration:none;transition:transform .15s,box-shadow .15s,gap .2s}
+.cta:hover{transform:translateY(-2px);box-shadow:0 6px 0 #b08200;gap:16px}
+.cta:active{transform:translateY(2px);box-shadow:0 2px 0 #b08200}
 .cta-ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.qual{display:flex;gap:14px;align-items:flex-start;margin-top:28px;max-width:34em;padding:16px 18px 14px;border-radius:16px;background:#fff8e1;border:1.5px solid #f4d77a}
-.qual p{font-size:15.5px;line-height:1.45;color:#3d4642}
-.qual b{display:block;font-weight:800;font-size:16.5px;color:#1c2226;margin-bottom:2px}
-.qual-ic{flex:none;width:26px;height:26px;margin-top:1px;fill:none;stroke:#1c2226;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.points{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px;padding-top:28px;border-top:1.5px solid #eceeeb}
-.points li{display:grid;gap:10px;align-content:start}
-.points b{display:block;font-weight:800;font-size:16px}
-.points span{display:block;font-size:15px;color:#6b756f;line-height:1.4}
-.ic{width:22px;height:22px;fill:none;stroke:#1c2226;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.note{font-weight:600;font-size:16px;color:#e8ebe6}
+.trust{list-style:none;display:flex;flex-wrap:wrap;gap:12px 24px;margin-top:48px;padding-top:24px;border-top:1px solid rgb(255 255 255/.25)}
+.trust li{display:flex;align-items:center;gap:8px;font-weight:600;font-size:16px}
+.ck{flex:none;width:18px;height:18px;fill:none;stroke:#f4b400;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* Under it: the qualification line and the button again, beside the driver app's Requests screen in a phone. */
+.below{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;padding:64px 0}
+.more h2{font-size:clamp(28px,3vw,40px);line-height:1.1}
+.more p{margin-top:12px;font-size:19px;color:#55605a}
+.more .cta{margin-top:28px}
 
 .foot{display:flex;flex-wrap:wrap;gap:8px 24px;padding:24px 0 28px;border-top:1.5px solid #eceeeb;font-size:14px;color:#6b756f}
 .foot a{text-decoration:none}
 .foot a:hover{color:#1c2226;text-decoration:underline;text-decoration-color:#f4b400;text-decoration-thickness:2px}
 .foot span{margin-right:auto}
+.foot small{font-size:12px}
 
 @media (max-width:960px){
-  .hero{grid-template-columns:1fr;gap:44px;padding:16px 0 48px}
+  .below{grid-template-columns:1fr;gap:44px;padding:48px 0}
 }
 @media (max-width:560px){
-  .top,.hero,.foot{width:min(1180px,100% - 40px)}
-  h1{margin-top:22px}
+  .top,.hero,.below,.foot{width:min(1180px,100% - 40px)}
   .cta{width:100%;justify-content:center}
-  .points{grid-template-columns:1fr;gap:18px;margin-top:40px}
-  .points li{grid-template-columns:22px 1fr;gap:14px}
+  .trust{flex-direction:column}
   .visual{margin:0 -20px;border-radius:0}
   .foot span{width:100%}
 }
